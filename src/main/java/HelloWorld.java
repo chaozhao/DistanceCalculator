@@ -19,6 +19,6 @@ public class HelloWorld extends HttpServlet {
         server.setHandler(context);
         context.addServlet(new ServletHolder(new HelloWorld()),"/*");
         server.start();
-        server.join();   
+        server.join();   /*test*/
     }
 }
