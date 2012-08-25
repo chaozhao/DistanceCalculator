@@ -1,0 +1,20 @@
+@(heading: String, distance: Int)
+
+@main("HIT3311 SDE"){
+
+	<h1>@heading</h1>
+    <p>Please input longitude and latitude to get distance between goal and swinburne campus.</p>
+	<form>
+
+	<fieldset name="input">
+	<legend>Distance Calculator</legend>
+	longitude: <input type="text" name="longitude" /><br />
+	latitude: <input type="text" name="latitude" /><br />
+	Distances: <label> @distance </label> <br />
+	<input type="submit" value="Submit" />
+
+	</fieldset>
+	</form>
+
+
+}
