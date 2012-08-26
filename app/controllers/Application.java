@@ -22,14 +22,17 @@ final static Form<Geo> geoForm = form(Geo.class);
 
   public static Result showDBpage()
   {
+
     Form<Geo> filledForm = geoForm.bindFromRequest();
 
     if(filledForm.hasErrors()) 
     {
+      //System.out.println("hasErrors");
       return badRequest(index.render(filledForm));
     } 
     else 
     {
+      //System.out.println("no Errors");
       Geo created = filledForm.get();
       return ok(database.render(created));  
     }
