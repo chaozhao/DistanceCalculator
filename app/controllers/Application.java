@@ -3,7 +3,6 @@ package controllers;
 import play.*;
 import play.mvc.*;
 import play.data.*;
-
 import models.Geo;
 import models.*;
 
@@ -23,24 +22,17 @@ final static Form<Geo> geoForm = form(Geo.class);
 
   public static Result showDBpage()
   {
-    //Form<Geo> filledForm = geoForm.bindFormRequest();
-
-  	//Geo loc = filledForm.get();
-    //return ok(database.render(loc));
-    /*
-    
-    Form<Geo> filledForm = geoForm.bindFormRequest();
+    Form<Geo> filledForm = geoForm.bindFromRequest();
 
     if(filledForm.hasErrors()) 
     {
-            return badRequest(index.render(filledForm));
+      return badRequest(index.render(filledForm));
     } 
     else 
     {
-            Geo created = filledForm.get();
-            return ok(summary.render(created));
-    }*/
-    return TODO;
+      Geo created = filledForm.get();
+      return ok(database.render(created));  
+    }
   }
   
 }

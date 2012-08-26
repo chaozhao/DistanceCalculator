@@ -1,14 +1,19 @@
 package models;
 
 import java.util.*;
-import javax.validation.*;
-import play.data.validation.Constraints.*;
+import javax.persistence.*;
 
-public class Geo
+import play.db.ebean.*;
+import play.data.format.*;
+import play.data.validation.*;
+
+import com.avaje.ebean.*;
+
+
+public class Geo extends Model
   {
-  	@Required
+  	
     public String longitute;
-    @Required
     public String latitute;
     
     public Geo()
@@ -20,6 +25,5 @@ public class Geo
     {
     	this.longitute = longitute;
     	this.latitute = latitute;
-    	//this.length = length;
     }
   }
