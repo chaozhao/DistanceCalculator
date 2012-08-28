@@ -7,10 +7,12 @@
 
 <p>Swinburne Hawthorn campus location: -37.82, 145.04</p>
 <p>enter longitute and latitute, this system will give you a distance between the location and Swin</p>
+
 @helper.form(action = routes.Application.showDBpage(),'id -> "geoForm" ) {
         
         @helper.inputText(geoForm("longitute"))
         @helper.inputText(geoForm("latitute"))
-        <input type="submit" class="btn primary" value="Calculate">
+        <input type="submit" class="btn btn-primary" value="Calculate">
+        <a href="@routes.Application.index" class="btn">Clear contents</a>    	
     }
 }
