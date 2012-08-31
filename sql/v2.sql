@@ -6,14 +6,20 @@ CREATE TABLE [ IF NOT EXISTS ] Coords
   distance    double  NOT NULL,
   PRIMARY KEY (ID),
   
-)
+);
 
 CREATE TABLE [ IF NOT EXISTS ] Time
 (
   T_ID int NOT NULL AUTO_INCREMENT,
   time_stamp    timestamp      NOT NULL,
   PRIMARY KEY (T_ID),
-)
+);
 
 
-SELECT Coords.ID, Coords.longitude, Coords.latitude, Coords.distance, Time.time_stamp FROM Coords INNER JOIN Time ON Coords.ID = Time.T_ID
+SELECT Coords.ID, Coords.longitude, Coords.latitude, Coords.distance, Time.time_stamp FROM Coords INNER JOIN Time ON Coords.ID = Time.T_ID;
+
+INSERT INTO Coords (longitude, latitude, distance)
+VALUES ($long, $lat, $dist);
+
+INSERT INTO Time (time_stamp)
+values (CURRENT_TIMESTAMP);
