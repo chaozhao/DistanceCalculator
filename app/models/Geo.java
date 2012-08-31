@@ -15,18 +15,18 @@ public class Geo
   {
     
   	@Required
-    public Double longitute;
+    public Double longitude;
     @Required
-    public Double latitute;
+    public Double latitude;
     
     public Geo()
     {
 
     }
 
-    public Geo(Double longitude,Double latitute)
+    public Geo(Double longitude,Double latitude)
     {
-    	this.longitute = longitute;
-    	this.latitute = latitute;
+    	this.longitude = longitude;
+    	this.latitude = latitude;
     }
   }

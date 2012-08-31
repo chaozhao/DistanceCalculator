@@ -37,5 +37,13 @@ final static Form<Geo> geoForm = form(Geo.class);
       return ok(database.render(created));  
     }
   }
+
+  public double calculateDistance(Geo input)
+  {
+    //TODO calculate Distance
+
+
+    return 100.0;
+  }
   
 }

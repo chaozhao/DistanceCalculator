@@ -6,12 +6,12 @@
 @main("") {
 
 <p>Swinburne Hawthorn campus location: -37.82, 145.04</p>
-<p>enter longitute and latitute, this system will give you a distance between the location and Swin</p>
+<p>enter longitude and latitude, this system will give you a distance between this location and Swinburne</p>
 
 @helper.form(action = routes.Application.showDBpage(),'id -> "geoForm" ) {
         
-        @helper.inputText(geoForm("longitute"))
-        @helper.inputText(geoForm("latitute"))
+        @helper.inputText(geoForm("longitude"))
+        @helper.inputText(geoForm("latitude"))
         <input type="submit" class="btn btn-primary" value="Calculate">
         <a href="@routes.Application.index" class="btn">Clear contents</a>    	
     }
