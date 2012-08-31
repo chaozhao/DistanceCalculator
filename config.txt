@@ -1,0 +1,6 @@
+=== hit3311 Config Vars
+DATABASE_URL:                 postgres://mkhdjvzgufwlol:A_jKxg52IuKquafdrkOzll2q11@ec2-23-21-209-221.compute-1.amazonaws.com:5432/d85q463g201rrb
+HEROKU_POSTGRESQL_MAROON_URL: postgres://nisdlcmvfylcjx:pjgTyHBzZ0ntb_VgC1teNadeFw@ec2-107-22-164-195.compute-1.amazonaws.com:5432/d2dasu4ca5veii
+JAVA_OPTS:                    -Xmx384m -Xss512k -XX:+UseCompressedOops
+MAVEN_OPTS:                   -Xmx384m -Xss512k -XX:+UseCompressedOops
+PATH:                         /usr/local/bin:/usr/bin:/bin
