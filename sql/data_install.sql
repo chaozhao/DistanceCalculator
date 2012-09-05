@@ -1,8 +1,8 @@
-CREATE TABLE [ IF NOT EXISTS ] Coords
+CREATE TABLE IF NOT EXISTS Coords
 (
-  longitude double  NOT NULL,
-  latitude   double NOT NULL,
-  distance    double  NOT NULL,
-  time_stamp    timestamp      NOT NULL,
-  CONSTRAINT PRIMARY KEY (time_stamp),
-)
+  longitude decimal  NOT NULL,
+  latitude   decimal NOT NULL,
+  distance    decimal  NOT NULL,
+  time_stamp  timestamp NOT NULL,
+  CONSTRAINT PRIMARY KEY (time_stamp)
+  );

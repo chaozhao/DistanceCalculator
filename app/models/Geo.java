@@ -4,14 +4,18 @@ import java.util.*;
 import javax.persistence.*;
 
 import play.db.ebean.*;
+import play.db.ebean.Model;
 import play.data.format.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.*;
-import models.*;
+
 import com.avaje.ebean.*;
 
+import play.db.jpa.*;
+//import play.db.jpa.Model;
+
 @Entity
-public class Geo// extends Models 
+public class Geo
   {
     
   	@Required
