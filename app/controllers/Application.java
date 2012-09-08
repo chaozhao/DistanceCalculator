@@ -1,24 +1,29 @@
 package controllers;
 
 import java.util.ArrayList;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import java.sql.*;
 import java.sql.Connection;
-
-import play.*;
-import play.mvc.*;
-import play.data.*;
-import models.Geo;
-import models.*;
-import play.db.DB;
-import play.db.jpa.*;
-
-import views.html.*;
-
-import java.sql.Connection;  
 import java.sql.DriverManager;  
 import java.sql.ResultSet;  
 import java.sql.SQLException;
 import java.sql.Statement; 
+import java.sql.PreparedStatement;
+
+import play.*;
+import play.mvc.*;
+import play.data.*;
+import play.db.DB;
+import play.db.jpa.*;
+import models.Geo;
+import models.*;
+
+import views.html.*;
+
+
 
 public class Application extends Controller {
 
@@ -32,12 +37,21 @@ final static Form<Geo> geoForm = form(Geo.class);
     return ok(index.render(geoForm));
   }
 
+  private static Connection getConnection() throws URISyntaxException, SQLException 
+  {
+        URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+
+        return DriverManager.getConnection(dbUrl, username, password);
+  }
+  
   public static void createTable()
   {
-      System.out.println("try to create a tabel;");
-      Connection connection = DB.getConnection();
+      Connection connection = DB.getConnection();     
       
-     
       String table  = "CREATE TABLE IF NOT EXISTS Coords ("+
                               "longitude decimal  NOT NULL,"+
                               "latitude   decimal NOT NULL,"+
@@ -84,41 +98,39 @@ final static Form<Geo> geoForm = form(Geo.class);
     }  
 
   }
-  public  static void insert()
+  public  static void insert(double latitude,double longitude)
   {
-    
-  }
+    Connection connection = DB.getConnection();
 
-  // Let the Play framework help out by modifying your
-  // database configuration in the application.conf file
-  /*public static ArrayList selectAll()
-  {
-    ArrayList<Geo> geoList = new ArrayList();
-    ResultSet resultset = null;
-    //Connection conn = DB.getConnection();
-    //conn.createStatement().execute("SELECT * from Coords");
-
-    //EntityManager em = JPA.em();
-
-    //resultset = DB.executeQuery("SELECT * from Coords");
-    
-    try 
+    try
     {
-      while(resultset.next())
-      {
-        geoList.add( 
-          new Geo(resultset.getString("longitude"),
-                  resultset.getString("latitude"),
-                  resultset.getString("distance"),
-                  resultset.getString("time_stamp") ));
-      }
-    }catch (SQLException e)
-    {
-      e.printStackTrace();
+      connection = DB.getConnection();  
+      
+      String insertQuery = "Insert into Coords (longitude,latitude,distance,time_stamp) VALUES ( ?, ? ,? ,?)"; 
+      PreparedStatement pstmt = connection.prepareStatement(insertQuery);
+      pstmt.setDouble(1, latitude);
+      pstmt.setDouble(2, longitude);
+      pstmt.setDouble(3, 100000);
+      java.sql.Timestamp  sqlDate = new java.sql.Timestamp(new java.util.Date().getTime());
+      pstmt.setTimestamp(4, sqlDate);
+      
+      pstmt.executeUpdate();
     }
-    return geoList;
-  }*/
-  
+    catch(SQLException e)
+    {
+        System.err.println("Inser query errors: " + e.toString());
+        
+        try
+        {
+          connection.close();
+        }
+        catch(Exception ee)
+        {
+          ee.printStackTrace();
+        }
+    }
+  }
+ 
   public static ResultSet selectAll()
   {
     ResultSet result = null;
@@ -147,8 +159,6 @@ final static Form<Geo> geoForm = form(Geo.class);
     return result;
   }
 
-
-
   public static Result showDBpage()
   {
     createTable();
@@ -165,7 +175,6 @@ final static Form<Geo> geoForm = form(Geo.class);
         e.printStackTrace();  
     }
 
-
     Form<Geo> filledForm = geoForm.bindFromRequest();
 
     if(filledForm.hasErrors()) 
@@ -174,19 +183,16 @@ final static Form<Geo> geoForm = form(Geo.class);
     } 
     else 
     {
-      //ArrayList<Geo> geoList = selectAll();
       Geo created = filledForm.get();
       return ok(database.render(created));  
-
-      //return ok(database.render());
     }
   }
 
+  //TODO calculate Distance
   public double calculateDistance(Geo input)
   {
-    //TODO calculate Distance
+    
 
-
-    return 100.0;
+    return 0.0;
   }
 }
