@@ -4,6 +4,6 @@ project/target
 target
 tmp
 .history
-.settings
+.settings/
 dist
 logs.txt
