@@ -101,11 +101,11 @@ final static Form<Geo> geoForm = form(Geo.class);
     }
     catch(URISyntaxException eUR)
     {
-          eUR.printStackTrace();
+       System.out.println(eUR.getMessage());
     }
     catch(ClassNotFoundException eClass)
     {
-          eClass.printStackTrace();
+       System.out.println(eClass.getMessage());
     } 
     
   }
