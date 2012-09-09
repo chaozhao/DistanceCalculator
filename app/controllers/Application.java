@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Properties;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,60 +35,11 @@ final static Form<Geo> geoForm = form(Geo.class);
  */
   public static Result index() 
   {
+    createTable();
     return ok(index.render(geoForm));
   }
-
-  private static Connection getConnection() throws URISyntaxException, SQLException 
+  public static void closeConnection(Connection connection)
   {
-        URI dbUri = new URI(System.getenv("DATABASE_URL"));
-
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
-
-        return DriverManager.getConnection(dbUrl, username, password);
-  }
-  
-  public static void createTable()
-  {
-      Connection connection = DB.getConnection();     
-      
-      String table  = "CREATE TABLE IF NOT EXISTS Coords ("+
-                              "longitude decimal  NOT NULL,"+
-                              "latitude   decimal NOT NULL,"+
-                              "distance    decimal  NOT NULL,"+
-                              "time_stamp  timestamp PRIMARY KEY)";
-
-      ResultSet resultSet = null;  
-      Statement statement = null;  
-
-        if (connection != null)
-        {
-          System.out.println("connection successful");
-        }
-        else{
-          System.out.println("Unsuccessful. Try again");      
-        }
-    
-    try
-      {
-        statement = connection.createStatement();
-        statement.executeUpdate(table);  
-        
-        if(statement != null)
-        {
-          statement.close();
-          System.out.println("executed query");
-        }
-        else
-        {
-          System.out.println("not executed query");
-        }
-    }
-      catch (SQLException e) {
-        e.printStackTrace();
-    }
-
     try 
     {   
         connection.close();  
@@ -98,14 +50,72 @@ final static Form<Geo> geoForm = form(Geo.class);
     }  
 
   }
-  public  static void insert(double latitude,double longitude)
+
+  private static Connection getConnection() throws URISyntaxException,SQLException,ClassNotFoundException
   {
-    Connection connection = DB.getConnection();
+      Class.forName("org.postgresql.Driver");
+      String url = "jdbc:postgresql://ec2-107-22-164-195.compute-1.amazonaws.com:5432/d2dasu4ca5veii?user=nisdlcmvfylcjx&password=pjgTyHBzZ0ntb_VgC1teNadeFw&ssl=true"; 
+      Connection conn = DriverManager.getConnection(url);
+      return conn;
+  }
+  
+  public static void createTable()
+  {
+     String tableCreate  = "CREATE TABLE IF NOT EXISTS Coords ("+
+                          "longitude decimal  NOT NULL,"+
+                          "latitude   decimal NOT NULL,"+
+                          "distance    decimal  NOT NULL,"+
+                          "time_stamp  timestamp PRIMARY KEY);";
+
+    ResultSet resultSet = null;  
+    Statement statement = null;  
+    Connection connection = null;
 
     try
     {
-      connection = DB.getConnection();  
-      
+      connection = getConnection();  
+      if (connection != null)
+      {
+        System.out.println("connection successful");
+      }
+      else
+      {
+        System.out.println("Unsuccessful. Try again");      
+      }  
+      statement = connection.createStatement();
+      statement.executeUpdate(tableCreate);  
+      if(statement != null)
+      {
+          statement.close();
+          System.out.println("executed query");
+      }
+      else
+      {
+          System.out.println("not executed query");
+      }
+    }
+    catch(SQLException eSQL)
+    {
+      System.out.println(eSQL.getMessage());
+        //eSQL.printStackTrace();
+    }
+    catch(URISyntaxException eUR)
+    {
+          eUR.printStackTrace();
+    }
+    catch(ClassNotFoundException eClass)
+    {
+          eClass.printStackTrace();
+    } 
+    
+  }
+  public  static void insert(double latitude,double longitude)
+  {
+    Connection connection = null;
+
+    try
+    {
+      connection = getConnection();  
       String insertQuery = "Insert into Coords (longitude,latitude,distance,time_stamp) VALUES ( ?, ? ,? ,?)"; 
       PreparedStatement pstmt = connection.prepareStatement(insertQuery);
       pstmt.setDouble(1, latitude);
@@ -113,33 +123,31 @@ final static Form<Geo> geoForm = form(Geo.class);
       pstmt.setDouble(3, 100000);
       java.sql.Timestamp  sqlDate = new java.sql.Timestamp(new java.util.Date().getTime());
       pstmt.setTimestamp(4, sqlDate);
-      
       pstmt.executeUpdate();
     }
     catch(SQLException e)
     {
-        System.err.println("Inser query errors: " + e.toString());
-        
-        try
-        {
-          connection.close();
-        }
-        catch(Exception ee)
-        {
-          ee.printStackTrace();
-        }
+        System.err.println("Insert query errors: " + e.toString());
     }
+    catch(URISyntaxException eURL)
+    {
+
+    }
+    catch(ClassNotFoundException eClass)
+    {
+
+    } 
   }
- 
+  
   public static ResultSet selectAll()
   {
     ResultSet result = null;
     Statement statement = null;
     Connection connection = null;
-     
+    
     try
     {
-      connection = DB.getConnection();  
+      connection = getConnection();  
       String sql = "select * from Coords";
       statement = connection.createStatement();
       result = statement.executeQuery(sql);
@@ -147,34 +155,26 @@ final static Form<Geo> geoForm = form(Geo.class);
     catch(SQLException e)
     {
         System.err.println("Error creating or running statement: " + e.toString());
-        try
-        {
-          connection.close();
-        }
-        catch(Exception ee)
-        {
-          ee.printStackTrace();
-        }
     }
+    catch(URISyntaxException eURL)
+    {
+
+    }
+    catch(ClassNotFoundException eClass)
+    {
+
+    } 
+
     return result;
   }
 
   public static Result showDBpage()
   {
     createTable();
-    ResultSet res = selectAll();
-    try
-    {
-        while (res.next()) 
-        {  
-            System.out.println("time_stamp:"  + res.getString("time_stamp"));  
-        }
-    }
-    catch (Exception e) 
-    {  
-        e.printStackTrace();  
-    }
+    //insert(20.0,111);
+    //ResultSet res = selectAll();
 
+    
     Form<Geo> filledForm = geoForm.bindFromRequest();
 
     if(filledForm.hasErrors()) 

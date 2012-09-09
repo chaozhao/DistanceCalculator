@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS Coords
   latitude   decimal NOT NULL,
   distance    decimal  NOT NULL,
   time_stamp  timestamp NOT NULL,
-  CONSTRAINT PRIMARY KEY (time_stamp)
+  PRIMARY KEY (time_stamp)
   );
 
 
